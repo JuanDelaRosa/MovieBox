@@ -3,7 +3,7 @@ package com.backbase.data.api.responses
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
 
-data class Result(
+data class ResultApi(
     @Expose @SerializedName("adult") val adult: Boolean?,
     @Expose @SerializedName("backdrop_path") val backdrop_path: String?,
     @Expose @SerializedName("genre_ids") val genre_ids: List<Int>?,
