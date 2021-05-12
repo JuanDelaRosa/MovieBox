@@ -8,20 +8,20 @@ import retrofit2.http.Path
 import retrofit2.http.Query
 
 interface TheMovieDBService {
-    @GET("3/movie/now_playing")
+    @GET("movie/now_playing")
     suspend fun getNowPlaying(
         @Query("language") language : String = Config.language,
         @Query("api_key") apiKey : String = Config.apikey,
     ): Response<ApiResponse>
 
-    @GET("3/movie/popular")
+    @GET("movie/popular")
     suspend fun getPopular(
         @Query("language") language : String = Config.language,
         @Query("page") page : Int = 1,
         @Query("api_key") apiKey : String = Config.apikey,
     ): Response<ApiResponse>
 
-    @GET("3/movie/{id}}")
+    @GET("movie/{id}")
     suspend fun getMovie(
         @Path("id") id : Int,
         @Query("language") language : String = Config.language,

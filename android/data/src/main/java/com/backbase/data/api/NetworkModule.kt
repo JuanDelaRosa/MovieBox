@@ -28,7 +28,9 @@ class NetworkModule {
             .build()
     }
 
-    fun createTheMovieDBAPI(endpointURL: String): TheMovieDBService {
+    fun createTheMovieDBAPI(endpointURL: String, language: String, apikey: String): TheMovieDBService {
+        Config.apikey = apikey
+        Config.language = language
         val retrofit = getRetrofit(endpointURL)
         return retrofit.create(TheMovieDBService::class.java)
     }
