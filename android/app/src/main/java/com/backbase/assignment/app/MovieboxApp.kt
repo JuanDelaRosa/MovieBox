@@ -2,9 +2,8 @@ package com.backbase.assignment.app
 
 import android.app.Application
 import com.backbase.domain.repositories.TheMovieDBRepository
-import com.backbase.domain.usecases.*
-import com.jakewharton.picasso.OkHttp3Downloader
-import com.squareup.picasso.Picasso
+import com.backbase.domain.usecases.GetNowPlayingUseCase
+import com.backbase.domain.usecases.GetPopularUseCase
 import timber.log.Timber
 
 

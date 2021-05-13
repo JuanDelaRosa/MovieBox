@@ -2,11 +2,12 @@
 <resources>
     <color name="colorPrimary">#008577</color>
     <color name="colorPrimaryDark">#00574B</color>
-    <color name="colorAccent">#D81B60</color>
+    <color name="colorAccent">#d3d353</color>
 
     <color name="greenRankin">#63cc82</color>
     <color name="greenRankinLeft">#29442b</color>
     <color name="yellowRankin">#d3d353</color>
     <color name="yellowRankinLeft">#403d17</color>
     <color name="backRankin">#0c1b21</color>
+    <color name="background">#212121</color>
 </resources>

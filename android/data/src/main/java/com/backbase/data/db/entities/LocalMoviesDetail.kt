@@ -1,12 +1,12 @@
 package com.backbase.data.db.entities
 
-import androidx.room.Entity
 import androidx.room.PrimaryKey
-import java.util.*
+import com.backbase.domain.entities.Genre
 
-//@Entity(tableName = "images")
+//@Entity(tableName = "detail")
 data class LocalMoviesDetail(
     @PrimaryKey(autoGenerate = true)
     var id : Int,
-    var base64: String
+    var runtime: String,
+    var genre: Genre
 )

@@ -2,10 +2,10 @@ package com.backbase.data.repositories
 
 import android.util.Log
 import com.backbase.data.api.TheMovieDBService
+import com.backbase.data.api.responses.ApiResponse
 import com.backbase.data.mappers.TheMovieDBMapper
 import com.backbase.domain.common.Result
 import com.backbase.domain.entities.Movie
-import com.backbase.domain.repositories.TheMovieDBRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
@@ -15,7 +15,7 @@ class MovieRemoteDataSourceImpl(private val service: TheMovieDBService, private 
             try {
                 val response = service.getNowPlaying()
                 if (response.isSuccessful) {
-                    return@withContext Result.Success(mapper.toMovieList(response.body()!!))
+                    return@withContext Result.Success(getDetail(response.body()!!))
                 } else {
                     return@withContext Result.Error(Exception(response.message()))
                 }
@@ -29,19 +29,7 @@ class MovieRemoteDataSourceImpl(private val service: TheMovieDBService, private 
             try {
                 val response = service.getPopular(page = page)
                 if (response.isSuccessful) {
-                    val movielist = mapper.toMovieList(response.body()!!)
-                    movielist.forEach {
-                        try {
-                            val result = service.getMovie(id = it.id)
-                            if (result.isSuccessful) {
-                                val castResult = mapper.toDetailedMovie(result.body()!!)
-                                it.runtime = castResult.runtime
-                            }
-                        }catch (e : Exception){
-                            Log.d("getPopular", "problem parsing $it.id movie")
-                        }
-                    }
-                    return@withContext Result.Success(movielist)
+                    return@withContext Result.Success(getDetail(response.body()!!))
                 } else {
                     return@withContext Result.Error(Exception(response.message()))
                 }
@@ -49,6 +37,23 @@ class MovieRemoteDataSourceImpl(private val service: TheMovieDBService, private 
                 return@withContext Result.Error(e)
             }
         }
+
+    private suspend fun getDetail(body: ApiResponse) : List<Movie> = withContext(Dispatchers.IO){
+        val movielist = mapper.toMovieList(body)
+        movielist.forEach {
+            try {
+                val result = service.getMovie(id = it.id)
+                if (result.isSuccessful) {
+                    val castResult = mapper.toDetailedMovie(result.body()!!)
+                    it.genre = castResult.genre
+                    it.runtime = castResult.runtime
+                }
+            }catch (e : Exception){
+                Log.d("getPopular", "problem parsing $it.id movie")
+            }
+        }
+        return@withContext movielist
+    }
 
     override suspend fun getMovie(id: Int): Result<Movie> =
         withContext(Dispatchers.IO) {

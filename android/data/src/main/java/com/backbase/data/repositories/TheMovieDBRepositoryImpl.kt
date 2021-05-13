@@ -1,7 +1,6 @@
 package com.backbase.data.repositories
 
 import com.backbase.domain.common.Result
-import com.backbase.domain.entities.ImageDB
 import com.backbase.domain.entities.Movie
 import com.backbase.domain.repositories.TheMovieDBRepository
 

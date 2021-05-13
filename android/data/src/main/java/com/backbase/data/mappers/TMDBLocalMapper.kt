@@ -1,15 +1,16 @@
 package com.backbase.data.mappers
 
 import com.backbase.data.db.entities.LocalMoviesDetail
-import com.backbase.domain.entities.ImageDB
+import com.backbase.domain.entities.DetailDB
+import com.backbase.domain.entities.Genre
 
 class TMDBLocalMapper {
-    fun toImageDB(response : LocalMoviesDetail?) : ImageDB{
+    fun toImageDB(response : LocalMoviesDetail?) : DetailDB{
         return if(response==null)
-            ImageDB(0,"")
-        else ImageDB(response.id,response.base64)
+            DetailDB(0,"0", Genre(1,""))
+        else DetailDB(response.id,response.runtime,response.genre)
     }
-    fun toImage(response : ImageDB) : LocalMoviesDetail{
-        return LocalMoviesDetail(response.id,response.base64)
+    fun toImage(response : DetailDB) : LocalMoviesDetail{
+        return LocalMoviesDetail(response.id,response.runtime,response.genre)
     }
 }

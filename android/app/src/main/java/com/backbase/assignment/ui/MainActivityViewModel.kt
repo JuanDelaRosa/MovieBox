@@ -1,17 +1,12 @@
 package com.backbase.assignment.ui
 
-import android.graphics.Bitmap
-import android.graphics.drawable.BitmapDrawable
-import android.util.Base64
 import android.widget.ImageView
 import androidx.lifecycle.*
 import com.backbase.assignment.app.MovieboxApp
 import com.backbase.domain.common.Result
-import com.backbase.domain.entities.ImageDB
 import com.backbase.domain.entities.Movie
 import com.squareup.picasso.Picasso
 import kotlinx.coroutines.launch
-import java.io.ByteArrayOutputStream
 
 class MainActivityViewModel(private val movieboxApp: MovieboxApp) : ViewModel() {
 
@@ -69,7 +64,7 @@ class MainActivityViewModel(private val movieboxApp: MovieboxApp) : ViewModel() 
 
     fun UsePicasso(view : ImageView, path:String){
         viewModelScope.launch {
-            Picasso.with(view.context).load("https://image.tmdb.org/t/p/w200/$path").into(view)
+            Picasso.with(view.context).load(path).into(view)
         }
     }
 

@@ -14,7 +14,8 @@ class TheMovieDBMapper {
                 it.title ?: "",
                 it.vote_average ?: -1.0,
                 it.overview ?: "",
-                0
+                0,
+                emptyList()
             )
         } ?: emptyList()
     }
@@ -27,7 +28,8 @@ class TheMovieDBMapper {
             it.title ?: "",
             it.vote_average ?: -1.0,
             it.overview ?: "",
-            it.runtime ?: -1
+            it.runtime ?: -1,
+            GenresMapper(it.genres)
         )
     }
     private fun CollectionMapper(collection : BelongsToCollection?) : Collection{

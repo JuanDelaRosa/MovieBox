@@ -14,7 +14,7 @@
 
         <ImageView
             android:id="@+id/poster"
-            android:layout_width="64dp"
+            android:layout_width="55dp"
             android:layout_height="80dp"
             android:layout_marginStart="16dp"
             android:layout_marginTop="8dp"
@@ -22,22 +22,28 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            tools:srcCompat="@tools:sample/avatars" />
+            android:background="@android:color/darker_gray"
+            android:padding="1dp"
+            tools:srcCompat="@tools:sample/avatars"
+            android:contentDescription="@string/content" />
 
         <TextView
             android:id="@+id/title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
+            android:layout_marginTop="5dp"
             app:layout_constraintStart_toEndOf="@+id/poster"
             app:layout_constraintTop_toTopOf="@+id/poster"
+            android:fontFamily="@font/roboto_bold"
+            android:textSize="15sp"
             tools:text="Title" />
 
         <TextView
             android:id="@+id/releaseDate"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="3dp"
             app:layout_constraintStart_toStartOf="@+id/title"
             app:layout_constraintTop_toBottomOf="@+id/title"
             tools:text="April 12, 2019" />
@@ -45,7 +51,7 @@
             android:id="@+id/runtime"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="3dp"
+            android:layout_marginTop="1dp"
             app:layout_constraintStart_toStartOf="@+id/releaseDate"
             app:layout_constraintTop_toBottomOf="@+id/releaseDate"
             tools:text="1020" />
@@ -83,6 +89,8 @@
             app:layout_constraintEnd_toEndOf="@+id/progress_bar"
             app:layout_constraintStart_toStartOf="@+id/progress_bar"
             app:layout_constraintTop_toTopOf="@+id/progress_bar"
+            android:fontFamily="@font/roboto_bold"
+            android:textSize="18sp"
             tools:text="60%" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

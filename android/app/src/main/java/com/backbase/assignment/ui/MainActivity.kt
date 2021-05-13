@@ -1,23 +1,31 @@
 package com.backbase.assignment.ui
 
+import android.app.Dialog
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.view.View
+import android.view.Window
+import android.view.WindowManager
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.backbase.assignment.R
 import com.backbase.assignment.app.MovieboxApp
 import com.backbase.assignment.databinding.ActivityMainBinding
+import com.backbase.assignment.databinding.FragmentDetailBinding
+import com.backbase.assignment.ui.movie.GenreAdapter
 import com.backbase.assignment.ui.movie.MoviesAdapter
 import com.backbase.assignment.ui.movie.PosterAdapter
 import com.backbase.assignment.ui.movie.ScrollListener
-import timber.log.Timber
+import com.backbase.domain.entities.Movie
 
 
 class MainActivity : AppCompatActivity() {
 
     private val binding: ActivityMainBinding by lazy { ActivityMainBinding.inflate(layoutInflater) }
     private val viewModel: MainActivityViewModel by lazy { MainActivityViewModel.MainActivityViewModelFactory((application as MovieboxApp)).create(MainActivityViewModel::class.java) }
-    private var page = 1
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
@@ -29,16 +37,10 @@ class MainActivity : AppCompatActivity() {
         binding.popular.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
 
         binding.popular.adapter = MoviesAdapter{
-            /*val intent = Intent(this, PokeinfoActivity::class.java)
-            intent.putExtra("id",it)
-            startActivity(intent)*/
-            Timber.d(it.toString())
+            ShowDetail(it)
         }
         binding.nowplayingRV.adapter = PosterAdapter{
-            /*val intent = Intent(this, PokeinfoActivity::class.java)
-            intent.putExtra("id",it)
-            startActivity(intent)*/
-            Timber.d(it.toString())
+            ShowDetail(it)
         }
         (binding.popular.adapter as MoviesAdapter).vm = viewModel
         (binding.nowplayingRV.adapter as PosterAdapter).vm = viewModel
@@ -64,7 +66,30 @@ class MainActivity : AppCompatActivity() {
         })
 
         viewModel.error.observe(this, {
-            Toast.makeText(this, "Ocurrio un error: ${it!!}", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, "Error: ${it!!}", Toast.LENGTH_SHORT).show()
         })
+    }
+    private fun ShowDetail(movie : Movie?){
+        movie.let {
+            val dialog = Dialog(this)
+            val fragmentBinding = FragmentDetailBinding.bind(layoutInflater.inflate(R.layout.fragment_detail, null))
+            fragmentBinding.movie = movie
+            fragmentBinding.lifecycleOwner = this
+            dialog.window!!.requestFeature(Window.FEATURE_NO_TITLE)
+            dialog.window!!.setFlags(
+                WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                WindowManager.LayoutParams.FLAG_FULLSCREEN
+            )
+            fragmentBinding.back.setOnClickListener {
+                dialog.dismiss()
+            }
+            fragmentBinding.genre.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
+            fragmentBinding.genre.adapter = GenreAdapter()
+            (fragmentBinding.genre.adapter as GenreAdapter).setData(movie!!.genre)
+            viewModel.UsePicasso(fragmentBinding.poster, movie.imageUrl("w500"))
+            dialog.setContentView(fragmentBinding.root)
+            dialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+            dialog.show()
+        }
     }
 }

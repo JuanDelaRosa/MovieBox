@@ -1,7 +1,7 @@
 package com.backbase.data.repositories
 
 import com.backbase.data.mappers.TMDBLocalMapper
-import com.backbase.domain.entities.ImageDB
+import com.backbase.domain.entities.DetailDB
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
 
@@ -11,11 +11,11 @@ class TMDBLocalDataSourceImpl(
     private val mapper : TMDBLocalMapper
 ) : TMDBLocalDataSource{
 
-    override suspend fun saveImage(image: ImageDB) {
+    override suspend fun saveImage(detail: DetailDB) {
        // dao.saveImage(mapper.toImage(image))
     }
 
-    override suspend fun getImage(id: Int): ImageDB =
+    override suspend fun getImage(id: Int): DetailDB =
         withContext(dispatcher) {
           //  val image = dao.getImage(id)
             return@withContext mapper.toImageDB(null)
