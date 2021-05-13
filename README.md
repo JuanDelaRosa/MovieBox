@@ -5,7 +5,7 @@
 
 ![](Screenshots/summary.png)
 
-# Decitions
+# Decisions
 * I had trouble downloading the logo from the repository. So I decided to edit it in Inkscape
 * I create an icon based on the logo
 
