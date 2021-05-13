@@ -10,19 +10,10 @@ class MovieboxApp: Application() {
     private val movieBoxRepository: TheMovieDBRepository
         get() = ServiceLocator.provideTMDBRepository(this)
 
-    /*val saveImage: SaveImageUseCase
-        get() = SaveImageUseCase(movieBoxRepository)
-
-    val loadImage: LoadImageUseCase
-        get() = LoadImageUseCase(movieBoxRepository)*/
-
     val getNowPlayingUseCase: GetNowPlayingUseCase
         get() = GetNowPlayingUseCase(movieBoxRepository)
 
     val getPopularUseCase: GetPopularUseCase
         get() = GetPopularUseCase(movieBoxRepository)
 
-    override fun onCreate() {
-        super.onCreate()
-    }
 }

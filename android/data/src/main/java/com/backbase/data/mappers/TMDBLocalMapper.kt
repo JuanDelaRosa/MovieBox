@@ -2,15 +2,18 @@ package com.backbase.data.mappers
 
 import com.backbase.data.db.entities.LocalMoviesDetail
 import com.backbase.domain.entities.DetailDB
-import com.backbase.domain.entities.Genre
+import com.google.gson.Gson
 
 class TMDBLocalMapper {
-    fun toImageDB(response : LocalMoviesDetail?) : DetailDB{
+    fun toDetailDB(response : LocalMoviesDetail?) : DetailDB{
         return if(response==null)
-            DetailDB(0,"0", Genre(1,""))
-        else DetailDB(response.id,response.runtime,response.genre)
+            DetailDB(0,0, emptyList())
+        else {
+            Gson().fromJson(response.info, DetailDB::class.java)
+        }
     }
-    fun toImage(response : DetailDB) : LocalMoviesDetail{
-        return LocalMoviesDetail(response.id,response.runtime,response.genre)
+    fun toLocalDetail(response : DetailDB) : LocalMoviesDetail{
+        val json = Gson().toJson(response)
+        return LocalMoviesDetail(response.id,json)
     }
 }

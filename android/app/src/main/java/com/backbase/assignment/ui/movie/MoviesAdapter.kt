@@ -1,6 +1,5 @@
 package com.backbase.assignment.ui.movie
 
-import android.app.Activity
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat

@@ -2,10 +2,14 @@ package com.backbase.assignment.app
 
 import android.content.Context
 import com.backbase.data.api.NetworkModule
+import com.backbase.data.db.entities.TMDBDataBase
+import com.backbase.data.mappers.TMDBLocalMapper
 import com.backbase.data.mappers.TheMovieDBMapper
 import com.backbase.data.repositories.MovieRemoteDataSourceImpl
+import com.backbase.data.repositories.TMDBLocalDataSourceImpl
 import com.backbase.data.repositories.TheMovieDBRepositoryImpl
 import com.backbase.domain.repositories.TheMovieDBRepository
+import kotlinx.coroutines.Dispatchers
 
 object ServiceLocator {
     private val networkModule by lazy {
@@ -14,8 +18,8 @@ object ServiceLocator {
 
     @Volatile
     var repository: TheMovieDBRepository? = null
-    //private var database: TMDBDataBase? = null
-    //private val localMapper by lazy { TMDBLocalMapper() }
+    private var database: TMDBDataBase? = null
+    private val localMapper by lazy { TMDBLocalMapper() }
 
     fun provideTMDBRepository(context: Context): TheMovieDBRepository {
         synchronized(this) {
@@ -28,25 +32,26 @@ object ServiceLocator {
             TheMovieDBRepositoryImpl(
                 MovieRemoteDataSourceImpl(
                     networkModule.createTheMovieDBAPI(" https://api.themoviedb.org/3/","en-US","55957fcf3ba81b137f8fc01ac5a31fb5"),
-                    TheMovieDBMapper()
-                )//, createTMDBLocalDataSource(context)
+                    TheMovieDBMapper(),
+                    createTMDBLocalDataSource(context)
+                )
             )
         repository = newRepo
         return newRepo
     }
 
-    /*private fun createTMDBLocalDataSource(context: Context) : TMDBLocalDataSourceImpl {
+    private fun createTMDBLocalDataSource(context: Context) : TMDBLocalDataSourceImpl {
         val database = database ?: createDataBase(context)
         return TMDBLocalDataSourceImpl(
-            database.tmbdDAO(),
+            database.dao(),
             Dispatchers.IO,
             localMapper
         )
     }
 
-    private fun createDataBase(context: Context): TMDBDataBase{
+    private fun createDataBase(context: Context): TMDBDataBase {
         val result = TMDBDataBase.getDataBase(context)
         database = result
         return result
-    }*/
+    }
 }
