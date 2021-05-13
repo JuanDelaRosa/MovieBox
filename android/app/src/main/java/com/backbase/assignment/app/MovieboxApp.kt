@@ -4,7 +4,6 @@ import android.app.Application
 import com.backbase.domain.repositories.TheMovieDBRepository
 import com.backbase.domain.usecases.GetNowPlayingUseCase
 import com.backbase.domain.usecases.GetPopularUseCase
-import timber.log.Timber
 
 
 class MovieboxApp: Application() {
@@ -25,6 +24,5 @@ class MovieboxApp: Application() {
 
     override fun onCreate() {
         super.onCreate()
-        Timber.plant(Timber.DebugTree())
     }
 }
