@@ -1,3 +1,26 @@
+# Libraries Used
+* Retrofit to request Client API
+* Picasso for image loading
+* Kotlin Coroutines for managing background threads with simplified code and reducing needs for callbacks
+
+![](Screenshots/summary.png)
+
+# Decitions
+* I had trouble downloading the logo from the repository. So I decided to edit it in Inkscape
+* I create an icon based on the logo
+
+
+# Preview
+
+![](Screenshots/WhatsApp_Video_2021-05-13_at_2.37.47_PM.mp4)
+![](Screenshots/WhatsApp_Video_2021-05-13_at_2.37.40_PM.mp4)
+![](Screenshots/WhatsApp_Video_2021-05-13_at_2.37.34_PM.mp4)
+
+
+
+
+
+
 # Mobile Assignment CS
 This is a placeholder README file with the instructions for the assingment. We expect you to build your own README file.
 
