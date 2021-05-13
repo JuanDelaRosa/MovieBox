@@ -2,6 +2,7 @@
 * Retrofit to request Client API
 * Picasso for image loading
 * Kotlin Coroutines for managing background threads with simplified code and reducing needs for callbacks
+* Room to locally save Movie Detail previously loaded
 
 ![](Screenshots/summary.png)
 
