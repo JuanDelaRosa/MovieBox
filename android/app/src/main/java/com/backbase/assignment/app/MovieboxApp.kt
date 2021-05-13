@@ -2,17 +2,21 @@ package com.backbase.assignment.app
 
 import android.app.Application
 import com.backbase.domain.repositories.TheMovieDBRepository
-import com.backbase.domain.usecases.GetMovieUseCase
-import com.backbase.domain.usecases.GetNowPlayingUseCase
-import com.backbase.domain.usecases.GetPopularUseCase
+import com.backbase.domain.usecases.*
+import com.jakewharton.picasso.OkHttp3Downloader
+import com.squareup.picasso.Picasso
 import timber.log.Timber
 
-class MovieBoxApp: Application() {
-    private val movieBoxRepository: TheMovieDBRepository
-        get() = ServiceLocator.providePokeRepository()
 
-    val getMovieUseCase: GetMovieUseCase
-        get() = GetMovieUseCase(movieBoxRepository)
+class MovieboxApp: Application() {
+    private val movieBoxRepository: TheMovieDBRepository
+        get() = ServiceLocator.provideTMDBRepository(this)
+
+    /*val saveImage: SaveImageUseCase
+        get() = SaveImageUseCase(movieBoxRepository)
+
+    val loadImage: LoadImageUseCase
+        get() = LoadImageUseCase(movieBoxRepository)*/
 
     val getNowPlayingUseCase: GetNowPlayingUseCase
         get() = GetNowPlayingUseCase(movieBoxRepository)

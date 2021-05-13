@@ -1,50 +1,84 @@
 package com.backbase.assignment.ui.movie
 
-import android.net.Uri
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.backbase.assignment.R
-import com.backbase.assignment.ui.custom.RatingView
-import com.google.gson.JsonArray
-import com.google.gson.JsonObject
+import com.backbase.assignment.databinding.MovieItemBinding
+import com.backbase.domain.entities.Movie
+import com.squareup.picasso.NetworkPolicy
+import com.squareup.picasso.Picasso
 
-class MoviesAdapter(var items: JsonArray = JsonArray()) :
-    RecyclerView.Adapter<MoviesAdapter.ViewHolder>() {
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        return ViewHolder(
-            LayoutInflater.from(parent.context).inflate(
-                R.layout.movie_item,
-                parent,
-                false
-            )
-        )
+class MoviesAdapter(val movieClick: (Int)-> Unit): RecyclerView.Adapter<MoviesAdapter.SearchViewHolder>() {
+
+    var movieList: ArrayList<Movie> = arrayListOf()
+    lateinit var binding : MovieItemBinding
+
+    fun setData(list: List<Movie>?){
+        if (movieList.isNullOrEmpty())
+            movieList = list as ArrayList<Movie>
+        else if(!list.isNullOrEmpty())
+            movieList.addAll(list)
+        notifyDataSetChanged()
     }
 
-    override fun onBindViewHolder(holder: ViewHolder, position: Int) =
-        holder.bind(items[position] as JsonObject)
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SearchViewHolder {
+        binding = MovieItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        return SearchViewHolder(binding)
+    }
 
-    override fun getItemCount() = items.size()
+    override fun getItemCount(): Int {
+        return movieList.size
+    }
 
-    class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        lateinit var poster: ImageView
-        lateinit var title: TextView
-        lateinit var releaseDate: TextView
-        lateinit var rating: RatingView
+    override fun onBindViewHolder(holder: SearchViewHolder, position: Int) {
+        val movie = movieList[position]
+        Picasso.with(holder.binding.poster.context).load("https://image.tmdb.org/t/p/w200/${movie.posterPath}").into(holder.binding.poster)
+        holder.binding.title.text = TitleFix(movie.title)
+        holder.binding.releaseDate.text = ReleaseDateFix(movie.releaseDate)
+        holder.binding.runtime.text = DurationFix(movie.detail?.runtime)
+        val ranking = (movie.voteAverage*10).toInt()
+        if(ranking<50)
+            holder.binding.progressBar.progressDrawable = holder.binding.root.resources.getDrawable(R.drawable.circle_yellow)
+        else
+            holder.binding.progressBar.progressDrawable = holder.binding.root.resources.getDrawable(R.drawable.circle)
+        holder.binding.progressBar.progress = ranking
+        holder.binding.textViewProgress.text = "$ranking%"
+        holder.binding.root.setOnClickListener{ movieClick(position + 1)}
+    }
 
-        fun bind(item: JsonObject) = with(itemView) {
-            poster = itemView.findViewById(R.id.poster)
-            poster.setImageURI(Uri.parse("https://image.tmdb.org/t/p/original/${item["poster_path"].asString}"))
-
-            title = itemView.findViewById(R.id.title)
-            title.text = item["title"].asString
-
-            releaseDate = itemView.findViewById(R.id.releaseDate)
-            releaseDate.text = item["release_date"].asString
+    private fun TitleFix(title: String): String {
+        return if(title.length >28){
+            title.substring(0,25)+"..."
+        }else title
+    }
+    private fun DurationFix(runtime : Int?) : String {
+        return if(runtime!=null){
+            val horas : Int = runtime/60
+            val min : Int = runtime - horas*60
+            "${horas}h ${min}m"
+        }else "-"
+    }
+    private fun ReleaseDateFix(d: String): String {
+        val dates = d.split("-")
+        val month = when (dates[1]) {
+            "01" -> "January"
+            "02" -> "February"
+            "03" -> "March"
+            "04" -> "April"
+            "05" -> "May"
+            "06" -> "June"
+            "07" -> "July"
+            "08" -> "August"
+            "09" -> "September"
+            "10" -> "October"
+            "11" -> "November"
+            "12" -> "December"
+            else -> ""
         }
+        return "$month ${dates[2]}, ${dates[0]}"
     }
+
+    class SearchViewHolder(val binding: MovieItemBinding): RecyclerView.ViewHolder(binding.root)
 }

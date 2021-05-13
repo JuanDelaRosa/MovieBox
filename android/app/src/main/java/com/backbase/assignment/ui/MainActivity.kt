@@ -1,45 +1,62 @@
 package com.backbase.assignment.ui
 
 import android.os.Bundle
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import com.backbase.assignment.R
+import com.backbase.assignment.app.MovieboxApp
+import com.backbase.assignment.databinding.ActivityMainBinding
 import com.backbase.assignment.ui.movie.MoviesAdapter
-import com.google.gson.JsonArray
-import com.google.gson.JsonParser
-import java.net.URL
+import com.backbase.assignment.ui.movie.PosterAdapter
+import com.backbase.assignment.ui.movie.ScrollListener
+import timber.log.Timber
 
 
 class MainActivity : AppCompatActivity() {
 
-    private val baseUrl = "https://api.themoviedb.org/3"
-    private val yourKey = "55957fcf3ba81b137f8fc01ac5a31fb5"
-
-    private lateinit var moviesAdapter: MoviesAdapter
-    private lateinit var recyclerView: RecyclerView
-
+    private val binding: ActivityMainBinding by lazy { ActivityMainBinding.inflate(layoutInflater) }
+    private val viewModel: MainActivityViewModel by lazy { MainActivityViewModel.MainActivityViewModelFactory((application as MovieboxApp)).create(MainActivityViewModel::class.java) }
+    private var page = 1
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
-
-        recyclerView = findViewById(R.id.recyclerView)
-        recyclerView.layoutManager =
-            LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
-
-        moviesAdapter = MoviesAdapter()
-        recyclerView.adapter = moviesAdapter
-
-        fetchMovies()
+        setContentView(binding.root)
+        binding.vm = viewModel
+        binding.lifecycleOwner = this
+        initUI()
     }
 
+    private fun initUI() {
+        binding.nowplayingRV.layoutManager = LinearLayoutManager(this,LinearLayoutManager.HORIZONTAL,false)
+        binding.popular.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
 
+        binding.popular.adapter = MoviesAdapter{
+            /*val intent = Intent(this, PokeinfoActivity::class.java)
+            intent.putExtra("id",it)
+            startActivity(intent)*/
+            Timber.d(it.toString())
+        }
+        binding.nowplayingRV.adapter = PosterAdapter{
+            /*val intent = Intent(this, PokeinfoActivity::class.java)
+            intent.putExtra("id",it)
+            startActivity(intent)*/
+            Timber.d(it.toString())
+        }
+        binding.popular.addOnScrollListener(ScrollListener(binding.popular,viewModel))
+        viewModel.getMostPopular()
+        viewModel.popularMovies.observe(this, { movies ->
+            movies.let {
+                    (binding.popular.adapter as MoviesAdapter).setData(it)
+                }
+        })
+        viewModel.getPlayingNow()
+        viewModel.nowPlaying.observe( this, { movies ->
+            movies.let {
+                (binding.nowplayingRV.adapter as PosterAdapter).setData(it)
+            }
+        })
 
-    private fun fetchMovies() {
-        val jsonString =
-            URL("$baseUrl/movie/now_playing?language=en-US&page=undefined&api_key=$yourKey").readText()
-        val jsonObject = JsonParser.parseString(jsonString).asJsonObject
-        moviesAdapter.items = jsonObject["results"] as JsonArray
-        moviesAdapter.notifyDataSetChanged()
+        viewModel.error.observe(this, {
+            Toast.makeText(this, "Ocurrio un error: ${it!!}", Toast.LENGTH_SHORT).show()
+        })
     }
 }

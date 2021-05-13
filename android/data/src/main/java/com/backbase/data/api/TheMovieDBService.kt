@@ -17,7 +17,7 @@ interface TheMovieDBService {
     @GET("movie/popular")
     suspend fun getPopular(
         @Query("language") language : String = Config.language,
-        @Query("page") page : Int = 1,
+        @Query("page") page : Int,
         @Query("api_key") apiKey : String = Config.apikey,
     ): Response<ApiResponse>
 

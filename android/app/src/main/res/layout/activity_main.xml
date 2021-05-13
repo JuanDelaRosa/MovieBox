@@ -1,14 +1,85 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    tools:context=".ui.MainActivity">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerView"
+    <data>
+        <variable
+            name="vm"
+            type="com.backbase.assignment.ui.MainActivityViewModel" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        tools:context=".ui.MainActivity">
 
-</LinearLayout>
+        <ImageView
+            android:id="@+id/logo"
+            android:src="@drawable/ic_generatedtext"
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:paddingEnd="110dp"
+            android:paddingStart="110dp"
+            android:textColor="#fcd052"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0"/>
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/nowplaying"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#767676"
+            android:text="Playing Now"
+            android:paddingStart="20dp"
+            android:textColor="#fcd052"
+            android:textSize="15sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@id/logo"
+            android:layout_marginTop="100dp"
+             />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/nowplayingRV"
+            android:layout_width="match_parent"
+            android:layout_height="150dp"
+            app:layout_constraintBottom_toTopOf="@+id/name"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/nowplaying"
+            app:layout_constraintVertical_bias="0.0"
+            tools:itemCount="5"
+            tools:spanCount="5" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#767676"
+            android:text="Most Popular"
+            android:paddingStart="20dp"
+            android:textColor="#fcd052"
+            android:textSize="15sp"
+            android:layout_marginTop="150dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/nowplaying" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/popular"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/name"
+            app:layout_constraintVertical_bias="1.0"
+            tools:itemCount="5" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

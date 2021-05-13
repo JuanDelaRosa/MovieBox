@@ -1,14 +1,14 @@
-package repositories
+package com.backbase.data.repositories
 
 import com.backbase.data.api.TheMovieDBService
+import com.backbase.data.mappers.TheMovieDBMapper
 import com.backbase.domain.common.Result
 import com.backbase.domain.entities.Movie
 import com.backbase.domain.repositories.TheMovieDBRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import mappers.TheMovieDBMapper
 
-class MovieRemoteDataSource(private val service: TheMovieDBService, private val mapper: TheMovieDBMapper) : TheMovieDBRepository {
+class MovieRemoteDataSourceImpl(private val service: TheMovieDBService, private val mapper: TheMovieDBMapper) : MovieRemoteDataSource {
     override suspend fun getNowPlaying(): Result<List<Movie>> =
         withContext(Dispatchers.IO) {
             try {
@@ -23,12 +23,18 @@ class MovieRemoteDataSource(private val service: TheMovieDBService, private val 
             }
         }
 
-    override suspend fun getPopular(): Result<List<Movie>> =
+    override suspend fun getPopular(page : Int): Result<List<Movie>> =
         withContext(Dispatchers.IO) {
             try {
-                val response = service.getPopular()
+                val response = service.getPopular(page = page)
                 if (response.isSuccessful) {
-                    return@withContext Result.Success(mapper.toMovieList(response.body()!!))
+                    val movielist = mapper.toMovieList(response.body()!!)
+                    movielist.forEach {
+                        val result = service.getMovie(id = it.id)
+                        val castResult = mapper.toDetailedMovie(result.body()!!)
+                        it.detail = castResult.detail
+                    }
+                    return@withContext Result.Success(movielist)
                 } else {
                     return@withContext Result.Error(Exception(response.message()))
                 }

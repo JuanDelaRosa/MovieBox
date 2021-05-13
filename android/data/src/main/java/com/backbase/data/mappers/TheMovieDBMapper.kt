@@ -1,4 +1,4 @@
-package mappers
+package com.backbase.data.mappers
 import com.backbase.data.api.responses.*
 import com.backbase.domain.entities.*
 import com.backbase.domain.entities.Collection
