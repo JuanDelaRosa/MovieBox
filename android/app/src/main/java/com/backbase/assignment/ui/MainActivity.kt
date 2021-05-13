@@ -1,6 +1,7 @@
 package com.backbase.assignment.ui
 
 import android.os.Bundle
+import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -20,8 +21,6 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
-        binding.vm = viewModel
-        binding.lifecycleOwner = this
         initUI()
     }
 
@@ -41,6 +40,8 @@ class MainActivity : AppCompatActivity() {
             startActivity(intent)*/
             Timber.d(it.toString())
         }
+        (binding.popular.adapter as MoviesAdapter).vm = viewModel
+        (binding.nowplayingRV.adapter as PosterAdapter).vm = viewModel
         binding.popular.addOnScrollListener(ScrollListener(binding.popular,viewModel))
         viewModel.getMostPopular()
         viewModel.popularMovies.observe(this, { movies ->
@@ -53,6 +54,13 @@ class MainActivity : AppCompatActivity() {
             movies.let {
                 (binding.nowplayingRV.adapter as PosterAdapter).setData(it)
             }
+        })
+
+        viewModel.dataLoading.observe(this, {
+            binding.pbLoading.visibility = if(it==true){
+                 View.VISIBLE
+            }else
+                View.GONE
         })
 
         viewModel.error.observe(this, {

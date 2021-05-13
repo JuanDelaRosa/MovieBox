@@ -8,55 +8,26 @@ class TheMovieDBMapper {
     fun toMovieList(response : ApiResponse) : List<Movie>{
         return response.results?.map {
             Movie(
-                it.adult ?: false,
-                it.backdrop_path ?: "",
-                it.genre_ids ?: emptyList(),
                 it.id ?: -1,
-                it.original_language ?: "",
-                it.original_title ?: "",
-                it.overview ?: "",
-                it.popularity ?: -1.0,
                 it.poster_path ?: "",
                 it.release_date ?: "",
                 it.title ?: "",
-                it.video ?: false,
                 it.vote_average ?: -1.0,
-                it.vote_count ?: -1,
-                null
+                it.overview ?: "",
+                0
             )
         } ?: emptyList()
     }
 
     fun toDetailedMovie(it : MovieDetailsResult) : Movie{
         return Movie(
-            it.adult ?: false,
-            it.backdrop_path ?: "",
-            emptyList(),
             it.id ?: -1,
-            it.original_language ?: "",
-            it.original_title ?: "",
-            it.overview ?: "",
-            it.popularity ?: -1.0,
             it.poster_path ?: "",
             it.release_date ?: "",
             it.title ?: "",
-            it.video ?: false,
             it.vote_average ?: -1.0,
-            it.vote_count ?: -1,
-            Detail(
-                CollectionMapper(it.belongs_to_collection),
-                it.budget ?: -1,
-                GenresMapper(it.genres),
-                it.homepage ?: "",
-                it.imdb_id ?: "",
-                CompaniesMapper(it.production_companies),
-                CountryMapper(it.production_countries),
-                it.revenue ?: -1,
-                it.runtime ?: -1,
-                LanguagesMapper(it.spoken_languages),
-                it.status ?: "",
-                it.tagline ?: ""
-            )
+            it.overview ?: "",
+            it.runtime ?: -1
         )
     }
     private fun CollectionMapper(collection : BelongsToCollection?) : Collection{

@@ -19,6 +19,7 @@ class PosterAdapter(val movieClick: (Int)-> Unit): RecyclerView.Adapter<PosterAd
 
     var movieList: List<Movie> = emptyList()
     lateinit var binding : PosterItemBinding
+    lateinit var vm : MainActivityViewModel
 
     fun setData(list: List<Movie>?){
         movieList = list ?: emptyList()
@@ -36,7 +37,7 @@ class PosterAdapter(val movieClick: (Int)-> Unit): RecyclerView.Adapter<PosterAd
 
     override fun onBindViewHolder(holder: SearchViewHolder, position: Int) {
         val movie = movieList[position]
-        Picasso.with(holder.binding.poster.context).load("https://image.tmdb.org/t/p/w200/${movie.posterPath}").into(holder.binding.poster)
+        vm.UsePicasso(holder.binding.poster,movie.posterPath)
         holder.binding.root.setOnClickListener{ movieClick(position + 1)}
     }
 

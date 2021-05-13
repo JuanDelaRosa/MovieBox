@@ -1,5 +1,6 @@
 package com.backbase.data.repositories
 
+import android.util.Log
 import com.backbase.data.api.TheMovieDBService
 import com.backbase.data.mappers.TheMovieDBMapper
 import com.backbase.domain.common.Result
@@ -30,9 +31,15 @@ class MovieRemoteDataSourceImpl(private val service: TheMovieDBService, private 
                 if (response.isSuccessful) {
                     val movielist = mapper.toMovieList(response.body()!!)
                     movielist.forEach {
-                        val result = service.getMovie(id = it.id)
-                        val castResult = mapper.toDetailedMovie(result.body()!!)
-                        it.detail = castResult.detail
+                        try {
+                            val result = service.getMovie(id = it.id)
+                            if (result.isSuccessful) {
+                                val castResult = mapper.toDetailedMovie(result.body()!!)
+                                it.runtime = castResult.runtime
+                            }
+                        }catch (e : Exception){
+                            Log.d("getPopular", "problem parsing $it.id movie")
+                        }
                     }
                     return@withContext Result.Success(movielist)
                 } else {
