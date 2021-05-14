@@ -19,8 +19,12 @@ class MoviesAdapter(val movieClick: (Movie)-> Unit): RecyclerView.Adapter<Movies
     fun setData(list: List<Movie>?){
         if (movieList.isNullOrEmpty())
             movieList = list as ArrayList<Movie>
-        else if(!list.isNullOrEmpty())
-            movieList.addAll(list)
+        else if(!list.isNullOrEmpty()) {
+            list.forEach {
+                if(!movieList.contains(it))
+                    movieList.add(it)
+            }
+        }
         notifyDataSetChanged()
     }
 

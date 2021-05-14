@@ -24,10 +24,6 @@ class MainActivityViewModel(private val movieboxApp: MovieboxApp) : ViewModel() 
 
     private var page = 1
 
-    fun isVisible():Boolean{
-        return dataLoading.value == true
-    }
-
     fun getPlayingNow(){
         viewModelScope.launch {
             _dataLoading.postValue(true)
