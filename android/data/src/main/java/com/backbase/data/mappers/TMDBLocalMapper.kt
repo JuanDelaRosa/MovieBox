@@ -1,19 +1,36 @@
 package com.backbase.data.mappers
 
 import com.backbase.data.db.entities.LocalMoviesDetail
+import com.backbase.data.db.entities.MovieListType
 import com.backbase.domain.entities.DetailDB
+import com.backbase.domain.entities.Movie
 import com.google.gson.Gson
 
 class TMDBLocalMapper {
     fun toDetailDB(response : LocalMoviesDetail?) : DetailDB{
         return if(response==null)
-            DetailDB(0,0, emptyList())
+            DetailDB(0,0,"","","","",0.00, emptyList())
         else {
             Gson().fromJson(response.info, DetailDB::class.java)
         }
     }
-    fun toLocalDetail(response : DetailDB) : LocalMoviesDetail{
+
+    fun toMovieList(list: List<LocalMoviesDetail>?) : List<Movie>{
+        return list?.map {
+            DetailtoMovie(toDetailDB(it))
+        } ?: emptyList()
+    }
+
+    private fun DetailtoMovie(detail : DetailDB) : Movie{
+        return Movie(detail.id,detail.image,detail.release,detail.title,detail.popularity,detail.description,detail.runtime,detail.genre)
+    }
+
+    fun toLocalDetail(response : DetailDB, type: MovieListType) : LocalMoviesDetail{
         val json = Gson().toJson(response)
-        return LocalMoviesDetail(response.id,json)
+        val type = when (type){
+            MovieListType.PlayingNow ->  false
+            MovieListType.Popular -> true
+        }
+        return LocalMoviesDetail(response.id,json,type)
     }
 }

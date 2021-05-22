@@ -33,13 +33,31 @@ class MainActivityViewModel(private val movieboxApp: MovieboxApp) : ViewModel() 
                     _dataLoading.postValue(false)
                 }
                 is Result.Error ->{
+                    loadFromDB(false)
+                }
+            }
+        }
+    }
+    private fun loadFromDB(popular : Boolean){
+        viewModelScope.launch {
+            when(val result = movieboxApp.getFromLocalDB.invoke(popular)){
+                is Result.Success ->{
+                    if(popular)
+                        popularMovies.postValue(result.data)
+                    else nowPlaying.postValue(result.data)
                     _dataLoading.postValue(false)
-                    nowPlaying.postValue(emptyList())
+                }
+                is Result.Error ->{
+                    _dataLoading.postValue(false)
+                    if(popular)
+                        popularMovies.postValue(emptyList())
+                    else nowPlaying.postValue(emptyList())
                     _error.postValue(result.exception.message)
                 }
             }
         }
     }
+
     fun getMostPopular(){
         viewModelScope.launch {
             _dataLoading.postValue(true)
@@ -50,17 +68,17 @@ class MainActivityViewModel(private val movieboxApp: MovieboxApp) : ViewModel() 
                     _dataLoading.postValue(false)
                 }
                 is Result.Error ->{
-                    _dataLoading.postValue(false)
-                    popularMovies.postValue(emptyList())
-                    _error.postValue(result.exception.message)
+                    loadFromDB(true)
                 }
             }
         }
     }
 
-    fun UsePicasso(view : ImageView, path:String){
-        viewModelScope.launch {
-            Picasso.with(view.context).load(path).into(view)
+    fun usePicasso(view : ImageView, path:String){
+        if(path.isNotEmpty()) {
+            viewModelScope.launch {
+                Picasso.with(view.context).load(path).into(view)
+            }
         }
     }
 

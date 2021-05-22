@@ -29,7 +29,7 @@ class PosterAdapter(val movieClick: (Movie)-> Unit): RecyclerView.Adapter<Poster
 
     override fun onBindViewHolder(holder: SearchViewHolder, position: Int) {
         val movie = movieList[position]
-        vm.UsePicasso(holder.binding.poster,movie.imageUrl())
+        vm.usePicasso(holder.binding.poster,movie.imageUrl())
         holder.binding.root.setOnClickListener{ movieClick(movie)}
     }
 

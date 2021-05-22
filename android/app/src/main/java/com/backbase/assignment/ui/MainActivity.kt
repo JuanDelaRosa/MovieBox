@@ -86,7 +86,7 @@ class MainActivity : AppCompatActivity() {
             fragmentBinding.genre.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
             fragmentBinding.genre.adapter = GenreAdapter()
             (fragmentBinding.genre.adapter as GenreAdapter).setData(movie!!.genre)
-            viewModel.UsePicasso(fragmentBinding.poster, movie.imageUrl("w500"))
+            viewModel.usePicasso(fragmentBinding.poster, movie.imageUrl("w500"))
             dialog.setContentView(fragmentBinding.root)
             dialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
             dialog.show()

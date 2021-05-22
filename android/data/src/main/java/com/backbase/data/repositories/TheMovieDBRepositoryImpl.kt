@@ -1,7 +1,6 @@
 package com.backbase.data.repositories
 
 import com.backbase.domain.common.Result
-import com.backbase.domain.entities.DetailDB
 import com.backbase.domain.entities.Movie
 import com.backbase.domain.repositories.TheMovieDBRepository
 
@@ -16,7 +15,7 @@ class TheMovieDBRepositoryImpl(
         return remoteDataSource.getPopular(page)
     }
 
-    override suspend fun getMovie(id: Int): Result<Movie> {
-        return remoteDataSource.getMovie(id)
+    override suspend fun getFromLocalDB(popular: Boolean): Result<List<Movie>> {
+        return remoteDataSource.getFromLocalDB(popular)
     }
 }

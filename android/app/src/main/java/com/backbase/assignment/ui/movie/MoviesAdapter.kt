@@ -17,7 +17,7 @@ class MoviesAdapter(val movieClick: (Movie)-> Unit): RecyclerView.Adapter<Movies
     lateinit var vm : MainActivityViewModel
 
     fun setData(list: List<Movie>?){
-        if (movieList.isNullOrEmpty())
+        if (movieList.isNullOrEmpty() && list!!.isNotEmpty())
             movieList = list as ArrayList<Movie>
         else if(!list.isNullOrEmpty()) {
             list.forEach {
@@ -40,7 +40,7 @@ class MoviesAdapter(val movieClick: (Movie)-> Unit): RecyclerView.Adapter<Movies
     override fun onBindViewHolder(holder: SearchViewHolder, position: Int) {
         val movie = movieList[position]
         val context = holder.binding.root.context
-        vm.UsePicasso(holder.binding.poster,movie.imageUrl())
+        vm.usePicasso(holder.binding.poster,movie.imageUrl())
         holder.binding.title.text = movie.TitleFix()
         holder.binding.releaseDate.text = movie.ReleaseDateFix()
         holder.binding.runtime.text = movie.DurationFix()
