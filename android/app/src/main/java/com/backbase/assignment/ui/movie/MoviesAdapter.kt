@@ -17,7 +17,7 @@ class MoviesAdapter(val movieClick: (Movie)-> Unit): RecyclerView.Adapter<Movies
     lateinit var vm : MainActivityViewModel
 
     fun setData(list: List<Movie>){
-        if(list.isNullOrEmpty()){
+        if(!list.isNullOrEmpty()){
             if(movieList.isNullOrEmpty())
                 movieList = list as ArrayList<Movie>
             else {
