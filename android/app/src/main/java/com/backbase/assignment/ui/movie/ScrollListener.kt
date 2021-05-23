@@ -9,13 +9,15 @@ class ScrollListener(var rv: RecyclerView, val vm : MainActivityViewModel) : Rec
     override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
         super.onScrolled(recyclerView, dx, dy)
         if(dy>0){
-            val visibleItemCount = rv.layoutManager!!.childCount
-            val totalItemCount = rv.layoutManager!!.itemCount
-            val pastVisibleItems = (rv.layoutManager!! as LinearLayoutManager).findLastVisibleItemPosition()
-            if(vm.dataLoading.value == false){
-                if((visibleItemCount+pastVisibleItems)>= totalItemCount){
-                    load = false
-                    vm.getMostPopular()
+            rv.layoutManager?.let {
+                val visibleItemCount = it.childCount
+                val totalItemCount = it.itemCount
+                val pastVisibleItems = (it as LinearLayoutManager).findLastVisibleItemPosition()
+                if(vm.dataLoading.value == false){
+                    if((visibleItemCount+pastVisibleItems)>= totalItemCount){
+                        load = false
+                        vm.getMostPopular()
+                    }
                 }
             }
         }

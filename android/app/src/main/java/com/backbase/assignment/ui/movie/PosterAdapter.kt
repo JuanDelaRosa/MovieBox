@@ -13,8 +13,8 @@ class PosterAdapter(val movieClick: (Movie)-> Unit): RecyclerView.Adapter<Poster
     lateinit var binding : PosterItemBinding
     lateinit var vm : MainActivityViewModel
 
-    fun setData(list: List<Movie>?){
-        movieList = list ?: emptyList()
+    fun setData(list: List<Movie>){
+        movieList = list
         notifyDataSetChanged()
     }
 

@@ -5,32 +5,36 @@ import com.backbase.domain.entities.Collection
 
 class TheMovieDBMapper {
 
-    fun toMovieList(response : ApiResponse) : List<Movie>{
-        return response.results?.map {
-            Movie(
-                it.id ?: -1,
-                it.poster_path ?: "",
-                it.release_date ?: "",
-                it.title ?: "",
-                it.vote_average ?: -1.0,
-                it.overview ?: "",
-                0,
-                emptyList()
-            )
-        } ?: emptyList()
+    fun toMovieList(response : ApiResponse?) : List<Movie>{
+        return if (response != null) {
+            response.results?.map {
+                Movie(
+                    it.id ?: -1,
+                    it.poster_path ?: "",
+                    it.release_date ?: "",
+                    it.title ?: "",
+                    it.vote_average ?: -1.0,
+                    it.overview ?: "",
+                    0,
+                    emptyList()
+                )
+            } ?: emptyList()
+        } else emptyList()
     }
 
-    fun toDetailedMovie(it : MovieDetailsResult) : Movie{
-        return Movie(
-            it.id ?: -1,
-            it.poster_path ?: "",
-            it.release_date ?: "",
-            it.title ?: "",
-            it.vote_average ?: -1.0,
-            it.overview ?: "",
-            it.runtime ?: -1,
-            GenresMapper(it.genres)
-        )
+    fun toDetailedMovie(mDetail : MovieDetailsResult?) : Movie{
+        return if (mDetail != null) {
+            Movie(
+                mDetail.id ?: -1,
+                mDetail.poster_path ?: "",
+                mDetail.release_date ?: "",
+                mDetail.title ?: "",
+                mDetail.vote_average ?: -1.0,
+                mDetail.overview ?: "",
+                mDetail.runtime ?: -1,
+                GenresMapper(mDetail.genres)
+            )
+        } else Movie(-1,"","","",-1.0,"",-1, emptyList())
     }
     private fun CollectionMapper(collection : BelongsToCollection?) : Collection{
         return if(collection!=null) {

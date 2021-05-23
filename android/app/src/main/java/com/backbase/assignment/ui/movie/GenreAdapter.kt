@@ -11,8 +11,8 @@ class GenreAdapter(): RecyclerView.Adapter<GenreAdapter.SearchViewHolder>() {
     var genreList: List<Genre> = emptyList()
     lateinit var binding : GenreItemBinding
 
-    fun setData(list: List<Genre>?){
-        genreList = list ?: emptyList()
+    fun setData(list: List<Genre>){
+        genreList = list
         notifyDataSetChanged()
     }
 

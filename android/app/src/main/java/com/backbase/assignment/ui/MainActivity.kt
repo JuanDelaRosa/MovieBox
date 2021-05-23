@@ -37,23 +37,23 @@ class MainActivity : AppCompatActivity() {
         binding.popular.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
 
         binding.popular.adapter = MoviesAdapter{
-            ShowDetail(it)
+            showDetail(it)
         }
         binding.nowplayingRV.adapter = PosterAdapter{
-            ShowDetail(it)
+            showDetail(it)
         }
         (binding.popular.adapter as MoviesAdapter).vm = viewModel
         (binding.nowplayingRV.adapter as PosterAdapter).vm = viewModel
         binding.popular.addOnScrollListener(ScrollListener(binding.popular,viewModel))
         viewModel.getMostPopular()
         viewModel.popularMovies.observe(this, { movies ->
-            movies.let {
+            movies?.let {
                     (binding.popular.adapter as MoviesAdapter).setData(it)
                 }
         })
         viewModel.getPlayingNow()
         viewModel.nowPlaying.observe( this, { movies ->
-            movies.let {
+            movies?.let {
                 (binding.nowplayingRV.adapter as PosterAdapter).setData(it)
             }
         })
@@ -66,30 +66,32 @@ class MainActivity : AppCompatActivity() {
         })
 
         viewModel.error.observe(this, {
-            Toast.makeText(this, "Error: ${it!!}", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, "Error: $it", Toast.LENGTH_SHORT).show()
         })
     }
-    private fun ShowDetail(movie : Movie?){
+    private fun showDetail(movie : Movie){
         movie.let {
             val dialog = Dialog(this)
             val fragmentBinding = FragmentDetailBinding.bind(layoutInflater.inflate(R.layout.fragment_detail, null))
             fragmentBinding.movie = movie
             fragmentBinding.lifecycleOwner = this
-            dialog.window!!.requestFeature(Window.FEATURE_NO_TITLE)
-            dialog.window!!.setFlags(
-                WindowManager.LayoutParams.FLAG_FULLSCREEN,
-                WindowManager.LayoutParams.FLAG_FULLSCREEN
-            )
-            fragmentBinding.back.setOnClickListener {
-                dialog.dismiss()
+            dialog.window?.let {
+                it.requestFeature(Window.FEATURE_NO_TITLE)
+                it.setFlags(
+                    WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                    WindowManager.LayoutParams.FLAG_FULLSCREEN
+                )
+                fragmentBinding.back.setOnClickListener {
+                    dialog.dismiss()
+                }
+                fragmentBinding.genre.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
+                fragmentBinding.genre.adapter = GenreAdapter()
+                (fragmentBinding.genre.adapter as GenreAdapter).setData(movie.genre)
+                viewModel.usePicasso(fragmentBinding.poster, movie.imageUrl("w500"))
+                dialog.setContentView(fragmentBinding.root)
+                it.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+                dialog.show()
             }
-            fragmentBinding.genre.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
-            fragmentBinding.genre.adapter = GenreAdapter()
-            (fragmentBinding.genre.adapter as GenreAdapter).setData(movie!!.genre)
-            viewModel.usePicasso(fragmentBinding.poster, movie.imageUrl("w500"))
-            dialog.setContentView(fragmentBinding.root)
-            dialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-            dialog.show()
         }
     }
 }

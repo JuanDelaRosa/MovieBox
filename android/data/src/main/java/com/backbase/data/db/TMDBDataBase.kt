@@ -22,7 +22,7 @@ abstract class TMDBDataBase : RoomDatabase(){
                 val instance = Room.databaseBuilder(
                     appContext,
                     TMDBDataBase::class.java,
-                    TMDBDataBase::class.simpleName!!
+                    TMDBDataBase::class.simpleName.toString()
                 ).fallbackToDestructiveMigration()
                     .build()
                 _Intance = instance

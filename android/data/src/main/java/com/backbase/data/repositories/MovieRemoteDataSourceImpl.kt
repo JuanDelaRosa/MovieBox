@@ -17,7 +17,7 @@ class MovieRemoteDataSourceImpl(private val service: TheMovieDBService, private 
             try {
                 val response = service.getNowPlaying()
                 if (response.isSuccessful) {
-                    return@withContext Result.Success(getDetail(response.body()!!, MovieListType.PlayingNow))
+                    return@withContext Result.Success(getDetail(response.body(), MovieListType.PlayingNow))
                 } else {
                     return@withContext Result.Error(Exception(response.message()))
                 }
@@ -31,7 +31,7 @@ class MovieRemoteDataSourceImpl(private val service: TheMovieDBService, private 
             try {
                 val response = service.getPopular(page = page)
                 if (response.isSuccessful) {
-                    return@withContext Result.Success(getDetail(response.body()!!,MovieListType.Popular))
+                    return@withContext Result.Success(getDetail(response.body(),MovieListType.Popular))
                 } else {
                     return@withContext Result.Error(Exception(response.message()))
                 }
@@ -54,7 +54,7 @@ class MovieRemoteDataSourceImpl(private val service: TheMovieDBService, private 
             }
     }
 
-    private suspend fun getDetail(body: ApiResponse, type : MovieListType) : List<Movie> = withContext(Dispatchers.IO){
+    private suspend fun getDetail(body: ApiResponse?, type : MovieListType) : List<Movie> = withContext(Dispatchers.IO){
         val movielist = mapper.toMovieList(body)
         val typetoBool = when (type){
             MovieListType.PlayingNow ->  false
@@ -65,7 +65,7 @@ class MovieRemoteDataSourceImpl(private val service: TheMovieDBService, private 
             try {
                 val result = service.getMovie(id = it.id)
                 if (result.isSuccessful) {
-                    val castResult = mapper.toDetailedMovie(result.body()!!)
+                    val castResult = mapper.toDetailedMovie(result.body())
                     it.genre = castResult.genre
                     it.runtime = castResult.runtime
                     localdata.saveDetail(DetailDB(it.id,it.runtime,it.posterPath,it.title,it.releaseDate,it.overview,it.voteAverage,it.genre),type)
