@@ -17,15 +17,17 @@ class MoviesAdapter(val movieClick: (Movie)-> Unit): RecyclerView.Adapter<Movies
     lateinit var vm : MainActivityViewModel
 
     fun setData(list: List<Movie>){
-        if (movieList.isNullOrEmpty() && list.isNotEmpty())
-            movieList = list as ArrayList<Movie>
-        else if(!list.isNullOrEmpty()) {
-            list.forEach {
-                if(!movieList.contains(it))
-                    movieList.add(it)
+        if(list.isNullOrEmpty()){
+            if(movieList.isNullOrEmpty())
+                movieList = list as ArrayList<Movie>
+            else {
+                list.forEach {
+                    if(!movieList.contains(it))
+                        movieList.add(it)
+                }
             }
+            notifyDataSetChanged()
         }
-        notifyDataSetChanged()
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SearchViewHolder {

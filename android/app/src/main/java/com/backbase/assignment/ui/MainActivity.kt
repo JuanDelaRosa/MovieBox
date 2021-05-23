@@ -70,28 +70,26 @@ class MainActivity : AppCompatActivity() {
         })
     }
     private fun showDetail(movie : Movie){
-        movie.let {
-            val dialog = Dialog(this)
-            val fragmentBinding = FragmentDetailBinding.bind(layoutInflater.inflate(R.layout.fragment_detail, null))
-            fragmentBinding.movie = movie
-            fragmentBinding.lifecycleOwner = this
-            dialog.window?.let {
-                it.requestFeature(Window.FEATURE_NO_TITLE)
-                it.setFlags(
-                    WindowManager.LayoutParams.FLAG_FULLSCREEN,
-                    WindowManager.LayoutParams.FLAG_FULLSCREEN
-                )
-                fragmentBinding.back.setOnClickListener {
-                    dialog.dismiss()
-                }
-                fragmentBinding.genre.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
-                fragmentBinding.genre.adapter = GenreAdapter()
-                (fragmentBinding.genre.adapter as GenreAdapter).setData(movie.genre)
-                viewModel.usePicasso(fragmentBinding.poster, movie.imageUrl("w500"))
-                dialog.setContentView(fragmentBinding.root)
-                it.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-                dialog.show()
+        val dialog = Dialog(this)
+        val fragmentBinding = FragmentDetailBinding.bind(layoutInflater.inflate(R.layout.fragment_detail, null))
+        fragmentBinding.movie = movie
+        fragmentBinding.lifecycleOwner = this
+        dialog.window?.let {
+            it.requestFeature(Window.FEATURE_NO_TITLE)
+            it.setFlags(
+                WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                WindowManager.LayoutParams.FLAG_FULLSCREEN
+            )
+            fragmentBinding.back.setOnClickListener {
+                dialog.dismiss()
             }
+            fragmentBinding.genre.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
+            fragmentBinding.genre.adapter = GenreAdapter()
+            (fragmentBinding.genre.adapter as GenreAdapter).setData(movie.genre)
+            viewModel.usePicasso(fragmentBinding.poster, movie.imageUrl("w500"))
+            dialog.setContentView(fragmentBinding.root)
+            it.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+            dialog.show()
         }
     }
 }
