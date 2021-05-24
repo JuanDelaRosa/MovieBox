@@ -17,6 +17,7 @@ class MovieRemoteDataSourceImpl(private val service: TheMovieDBService, private 
             try {
                 val response = service.getNowPlaying()
                 if (response.isSuccessful) {
+                    localdata.delete(MovieListType.PlayingNow)
                     return@withContext Result.Success(getDetail(response.body(), MovieListType.PlayingNow))
                 } else {
                     return@withContext Result.Error(Exception(response.message()))
@@ -31,6 +32,7 @@ class MovieRemoteDataSourceImpl(private val service: TheMovieDBService, private 
             try {
                 val response = service.getPopular(page = page)
                 if (response.isSuccessful) {
+                    localdata.delete(MovieListType.Popular)
                     return@withContext Result.Success(getDetail(response.body(),MovieListType.Popular))
                 } else {
                     return@withContext Result.Error(Exception(response.message()))
@@ -40,10 +42,10 @@ class MovieRemoteDataSourceImpl(private val service: TheMovieDBService, private 
             }
         }
 
-    override suspend fun getFromLocalDB(popular: Boolean): Result<List<Movie>> =
+    override suspend fun getFromLocalDB(type: MovieListType): Result<List<Movie>> =
         withContext(Dispatchers.IO){
             try {
-                val response = localdata.getMovies(popular)
+                val response = localdata.getMovies(type)
                 if (response.count()>0) {
                     return@withContext Result.Success(response)
                 } else {
@@ -56,11 +58,6 @@ class MovieRemoteDataSourceImpl(private val service: TheMovieDBService, private 
 
     private suspend fun getDetail(body: ApiResponse?, type : MovieListType) : List<Movie> = withContext(Dispatchers.IO){
         val movielist = mapper.toMovieList(body)
-        val typetoBool = when (type){
-            MovieListType.PlayingNow ->  false
-            MovieListType.Popular -> true
-        }
-        localdata.delete(typetoBool)
         movielist.forEach {
             try {
                 val result = service.getMovie(id = it.id)

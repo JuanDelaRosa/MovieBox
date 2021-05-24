@@ -33,23 +33,23 @@ class MainActivityViewModel(private val movieboxApp: MovieboxApp) : ViewModel() 
                     _dataLoading.postValue(false)
                 }
                 is Result.Error ->{
-                    loadFromDB(false)
+                    loadFromDB(1)
                 }
             }
         }
     }
-    private fun loadFromDB(popular : Boolean){
+    private fun loadFromDB(popular : Int){
         viewModelScope.launch {
             when(val result = movieboxApp.getFromLocalDB.invoke(popular)){
                 is Result.Success ->{
-                    if(popular)
+                    if(popular == 1 || popular ==3)
                         popularMovies.postValue(result.data)
                     else nowPlaying.postValue(result.data)
                     _dataLoading.postValue(false)
                 }
                 is Result.Error ->{
                     _dataLoading.postValue(false)
-                    if(popular)
+                    if(popular == 2 || popular ==3)
                         popularMovies.postValue(emptyList())
                     else nowPlaying.postValue(emptyList())
                     _error.postValue(result.exception.message)
@@ -68,7 +68,7 @@ class MainActivityViewModel(private val movieboxApp: MovieboxApp) : ViewModel() 
                     _dataLoading.postValue(false)
                 }
                 is Result.Error ->{
-                    loadFromDB(true)
+                    loadFromDB(2)
                 }
             }
         }

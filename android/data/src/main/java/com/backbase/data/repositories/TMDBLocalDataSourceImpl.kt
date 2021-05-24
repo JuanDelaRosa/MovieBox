@@ -15,7 +15,17 @@ class TMDBLocalDataSourceImpl(
 ) : TMDBLocalDataSource{
 
     override suspend fun saveDetail(detail: DetailDB, type: MovieListType) {
-       dao.saveDetail(mapper.toLocalDetail(detail,type))
+        withContext(dispatcher) {
+            val tmpMovie = dao.getDetail(detail.id)
+            when(type){
+                MovieListType.PlayingNow ->{
+                    dao.saveDetail(mapper.toLocalDetail(detail, (tmpMovie?.popular ?: false),true))
+                }
+                MovieListType.Popular ->{
+                    dao.saveDetail(mapper.toLocalDetail(detail,true, (tmpMovie?.playingNow ?: false)))
+                }
+            }
+        }
     }
 
     override suspend fun getDetail(id: Int): DetailDB =
@@ -24,14 +34,16 @@ class TMDBLocalDataSourceImpl(
             return@withContext mapper.toDetailDB(detail)
         }
 
-    override suspend fun getMovies(popular : Boolean): List<Movie> =
+    override suspend fun getMovies(type: MovieListType): List<Movie> =
         withContext(dispatcher) {
-            val detail = dao.getMovies(popular)
+            val detail = if(type == MovieListType.Popular) dao.getPopular() else dao.getPlayingNow()
             return@withContext mapper.toMovieList(detail)
         }
 
-    override suspend fun delete(popular: Boolean) {
-        dao.detele(popular)
+    override suspend fun delete(type: MovieListType) {
+        withContext(dispatcher) {
+            if (type == MovieListType.Popular) dao.detelePopular() else dao.detelePlayingNow()
+        }
     }
 
 }

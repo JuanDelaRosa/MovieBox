@@ -25,12 +25,8 @@ class TMDBLocalMapper {
         return Movie(detail.id,detail.image,detail.release,detail.title,detail.popularity,detail.description,detail.runtime,detail.genre)
     }
 
-    fun toLocalDetail(response : DetailDB, type: MovieListType) : LocalMoviesDetail{
+    fun toLocalDetail(response : DetailDB, popular : Boolean, playingNow : Boolean) : LocalMoviesDetail{
         val json = Gson().toJson(response)
-        val type = when (type){
-            MovieListType.PlayingNow ->  false
-            MovieListType.Popular -> true
-        }
-        return LocalMoviesDetail(response.id,json,type)
+        return LocalMoviesDetail(response.id,json,popular,playingNow)
     }
 }

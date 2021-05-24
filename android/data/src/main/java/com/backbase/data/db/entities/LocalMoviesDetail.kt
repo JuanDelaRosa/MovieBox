@@ -10,5 +10,7 @@ data class LocalMoviesDetail(
     var id : Int,
     var info: String,
     @ColumnInfo(defaultValue = "0")
-    var type : Boolean
+    var popular : Boolean,
+    @ColumnInfo(defaultValue = "0")
+    var playingNow : Boolean
 )

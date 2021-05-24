@@ -7,7 +7,6 @@ import com.backbase.domain.entities.Movie
 interface TMDBLocalDataSource{
     suspend fun saveDetail(detail: DetailDB, type: MovieListType)
     suspend fun getDetail(id : Int) : DetailDB
-
-    suspend fun getMovies(popular : Boolean): List<Movie>
-    suspend fun delete(popular: Boolean)
+    suspend fun getMovies(type: MovieListType): List<Movie>
+    suspend fun delete(type: MovieListType)
 }
